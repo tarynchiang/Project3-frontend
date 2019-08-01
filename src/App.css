@@ -1,5 +1,5 @@
 body{
-  font-family:Marker Felt, fantasy;
+  font-family:Georgia, serif;
 }
 
 nav{
@@ -14,9 +14,15 @@ nav{
   border-style: none;
   background-color:transparent;
   font-size:30px;
+  font-weight:bold;
   color:white;
   margin:20px;
-  font-family:Marker Felt, fantasy;
+  font-family:Georgia, serif;
+  opacity: 0.9;
+}
+
+.btn:hover{
+  opacity: 1;
 }
 
 .form-sec{
@@ -53,4 +59,72 @@ nav{
   font-size:30px;
   border:solid;
   padding:10px;
+}
+
+.Ingredient-page{
+  background-image:url("/img/build-cocktail4.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  height:1000px;
+  color:white;
+  font-family:Gill Sans, sans-serif;
+  display:flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  
+}
+
+.MyIngredientsList{
+  border:1px solid white;
+  height:500px;
+  padding:20px;
+  font-size:20px;
+  margin-top:20px;
+}
+
+
+
+
+.eachIngredient{
+  font-size:30px;
+  color:white;
+  border-style:none;
+  background-color: transparent;
+  font-weight:bold;
+  opacity:0.8;
+}
+
+.eachIngredient:hover{
+  opacity:1;
+}
+
+.IngredientsList{
+  list-style: none;
+  max-height:500px;/* you can change as you need it */
+  overflow:auto;/* to get scroll */
+  border:1px solid white;
+  padding:20px;
+}
+
+.delete-btn{
+  border-style: none;
+  background-color: transparent;
+}
+
+.delete-btn > img{
+  width:15px;
+  opacity:0.5;
+}
+
+.delete-btn > img:hover{
+  opacity:1;
+}
+
+.eachMyIngredient{
+  list-style: none;
+  display:flex;
+  flex-direction:row;
+  justify-content: space-between;
+  margin:5px;
 }

@@ -1,9 +1,13 @@
 import React from 'react';
 import './App.css';
+import {Route, Link, Switch} from 'react-router-dom';
 import SignUp from "./components/signup/SignUp.js"
 import LogIn from "./components/login/LogIn.js";
+import Refrigerator from "./components/refrigerator/Refrigerator.js";
+import Homepage from "./components/homepage/homePage.js";
 import AuthService from './services/AuthService.js';
 import NavBar from './components/navbar/navBar.js';
+import axios from 'axios';
 
 class App extends React.Component{
 
@@ -11,21 +15,34 @@ class App extends React.Component{
   constructor(props){
     super(props);
     this.state={
-      listOfAllIngrediants:[],
+      listOfAllIngredients:[],
+      myListOfIngredients:[],
       currentlyLoggedIn: null,
       signupShowing: false,
       loginShowing: false,
+      ready: false,
+      mylistShowing:false,
     }
 
     this.service = new AuthService();
   }
 
   
-  getAllIngrediants =()=>{
-    
+  getAllIngredients =()=>{
+    axios.get('http://localhost:5000/ingredients-list')
+    .then((ingredients)=>{
+      console.log('ingredients from backend=========',ingredients.data)
+      this.setState({listOfAllIngredients: ingredients.data, ready:true})
+    })
   }
 
-
+  getMyIngredients = () =>{
+    axios.get("http://localhost:5000/ingrediant-you-have", {withCredentials: true})
+    .then((ingredients)=>{
+      console.log('my ingredients<<<<<<',ingredients.data)
+      this.setState({myListOfIngredients: ingredients.data, mylistShowing:true})
+    })
+  }
 
 
   getCurrentlyLoggedInUser = () =>{
@@ -62,10 +79,10 @@ class App extends React.Component{
   }
 
   componentDidMount() {
-    // this.getAllProjects();
+    this.getMyIngredients();
     this.getCurrentlyLoggedInUser();
+    this.getAllIngredients();
   }
-
 
 
   render(){
@@ -89,6 +106,19 @@ class App extends React.Component{
             toggleForm={this.toggleForm}
             cancelBtn={this.cancelBtn}/>
         }
+
+        <Switch>
+        <Route exact path="/refrigerator" render ={(props)=> <Refrigerator
+           {...props} 
+           allTheIngredients ={this.state.listOfAllIngredients}
+           MyIngredients = {this.state.myListOfIngredients}
+           getMyIngredients = {this.getMyIngredients}
+           ready = {this.state.ready}
+           mylistShowing = {this.state.mylistShowing}
+           getData = {this.getAllIngredients}
+           theUser = {this.state.currentlyLoggedIn} 
+           />} />
+        </Switch>
       </div>
     );
   }

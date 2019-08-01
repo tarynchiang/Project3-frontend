@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AuthService from '../../services/AuthService';
 import '../../App.css';
+
 class LogIn extends Component{
     constructor(props){
         super(props);
