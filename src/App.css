@@ -1,33 +1,56 @@
-.App {
-  text-align: center;
+body{
+  font-family:Marker Felt, fantasy;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+nav{
+  background-color: rgba(245, 30, 30, 0.782);
+  display:flex;
+  flex-direction:row;
+  justify-content: flex-end;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
+
+.btn{
+  border-style: none;
+  background-color:transparent;
+  font-size:30px;
+  color:white;
+  margin:20px;
+  font-family:Marker Felt, fantasy;
+}
+
+.form-sec{
+  position: absolute;
+  left:19%;
+  top:8%;
+}
+
+.sign-form{
+  color:white;
+  width:600px;
+  padding:45px;
+  font-size:30px;
+  background:rgba(66,65,62,0.7);
+  display:flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+}
+.sign-form *{
+  margin:20px;
+}
+.sign-form input{
+  font-size:20px;
+  height:40px;
 }
 
-.App-link {
-  color: #61dafb;
+.btn-sec{
+  display:flex;
+  flex-direction:row;
+  justify-content: space-between;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.btn-sec > button{
+  width:30%;
+  font-size:30px;
+  border:solid;
+  padding:10px;
 }
