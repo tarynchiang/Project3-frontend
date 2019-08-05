@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
-
+import {Link} from 'react-router-dom';
  class Refrigerator extends Component{
 
-
+    constructor(props){
+        super(props);
+        this.state = {
+            cocktailsID : [],
+            cocktailYouCanMake:[]
+        }
+    }
     addNewItem = (e)=>{
-        console.log('0-0-0-0-0-0-',e.target.name)
-        console.log('-=-=-=-=-',this.props.theUser._id)
         axios.post("http://localhost:5000/create-item",{name: e.target.name,}, {withCredentials: true})
         .then(()=>{
             console.log('success create')
@@ -29,6 +33,84 @@ import axios from 'axios';
         })
     }
 
+
+    CompareTwoLists = (arr1,arr2)=>{
+        return arr1.filter(value => -1 !== arr2.indexOf(value))
+    }
+
+    getCocktailName = (Ingredient) =>{
+        return axios.get('https://www.thecocktaildb.com/api/json/v1/1/filter.php?i='+Ingredient.name)
+        .then((Cocktails)=>{
+            console.log('Cocktails',Cocktails)
+            let result = Cocktails.data.drinks.map((eachdrinkOB)=>{
+                return eachdrinkOB.idDrink;
+            })
+            return result;
+        })
+    }
+
+    SearchByIngredients = async (IngredientsList)=>{
+        let result,Arr;
+        console.log('IngredientsList',IngredientsList);
+        
+        result = await this.getCocktailName(IngredientsList[0]);
+        
+        if(IngredientsList.length===1){
+            console.log("result>>>>",result);
+            return result;
+        }
+
+        for(let i=1;i < IngredientsList.length;i++){
+            Arr = await this.getCocktailName(IngredientsList[i]);
+            result = await this.CompareTwoLists(Arr,result);
+        }
+
+        console.log("result>>>>",result);
+        return result;
+    }
+
+    handleSearchInput = async ()=>{
+        let searchList = await this.SearchByIngredients(this.props.MyIngredients);
+        this.setState({
+            cocktailsID: searchList
+        });
+        this.fetchCocktailYouCanMake();
+    }
+    
+    fetchCocktailYouCanMake = ()=>{
+        let info = [];
+        let final = [];
+
+
+        this.state.cocktailsID.forEach((eachCoctailID,i)=>{
+         info.push(axios.get('https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i='+eachCoctailID))
+        })
+
+        axios.all(info).then((results)=>{
+            console.log('info----------',results);
+
+            results.forEach((eachThing)=>{
+
+                final.push(eachThing.data.drinks[0]);
+
+            })
+
+            this.setState({cocktailYouCanMake: final})
+
+        })
+    }
+
+    showCocktailYouCanMake = ()=>{
+        return this.state.cocktailYouCanMake.map((eachCoctail, i)=>{
+           return(
+               <Link exact to={'/details/'+eachCoctail.idDrink} className="eachCocktail">
+                   <img src={eachCoctail.strDrinkThumb}/>
+                   <h3>{eachCoctail.strDrink}</h3>
+               </Link>
+           )
+        })
+    }
+
     showAllIngredients = ()=>{
         return this.props.allTheIngredients.map((eachIngredient)=>{
             return(
@@ -40,7 +122,6 @@ import axios from 'axios';
     }
 
     showMyIngredients = ()=>{
-        console.log('hihi')
         return this.props.MyIngredients.map((eachIngredient)=>{
             return(
                     <li className="eachMyIngredient">
@@ -52,30 +133,39 @@ import axios from 'axios';
             )
         })
     }
-    
+
             
     render(){
-                
+        console.log('my state',this.state);
         if(this.props.ready && this.props.mylistShowing){
             return(
                 <div className="Ingredient-page">
-                    <div>
-                        <ul className="IngredientsList">
-                            {this.showAllIngredients()}
-                        </ul>
-                    </div>
-                    <div className='MyIngredientsList'>
-                        <h1>Ingredients I Have</h1>
-                        {this.showMyIngredients()}
-                    </div>
+                    <div className="list-part">
+                        <div className="list-sec">
+                            <ul className="IngredientsList">
+                                {this.showAllIngredients()}
+                            </ul>
+                            <div className='MyIngredientsList'>
+                                <h1>My Ingredients</h1>
+                                {this.showMyIngredients()}
+                            </div>
+                        </div>
+                        
+                        <button className="search-btn"onClick={this.handleSearchInput}>Search</button>
                     
+                    </div>
+                    <div className='myCocktailList'>
+                        {this.showCocktailYouCanMake()}
+                    </div>
                 </div>
             )
         }
         else if(this.props.ready){
             return(
                 <div>
-                    {this.showAllIngredients()}
+                    <ul className="IngredientsList">
+                        {this.showAllIngredients()}
+                    </ul>
                 </div>
             )
         }

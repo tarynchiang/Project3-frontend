@@ -4,6 +4,7 @@ import {Route, Link, Switch} from 'react-router-dom';
 import SignUp from "./components/signup/SignUp.js"
 import LogIn from "./components/login/LogIn.js";
 import Refrigerator from "./components/refrigerator/Refrigerator.js";
+import CocktailDetails from "./components/cocktaildetails/CocktailDetails.js";
 import Homepage from "./components/homepage/homePage.js";
 import AuthService from './services/AuthService.js';
 import NavBar from './components/navbar/navBar.js';
@@ -31,19 +32,21 @@ class App extends React.Component{
   getAllIngredients =()=>{
     axios.get('http://localhost:5000/ingredients-list')
     .then((ingredients)=>{
-      console.log('ingredients from backend=========',ingredients.data)
+      // console.log('ingredients from backend=========',ingredients.data)
       this.setState({listOfAllIngredients: ingredients.data, ready:true})
     })
   }
 
   getMyIngredients = () =>{
-    axios.get("http://localhost:5000/ingrediant-you-have", {withCredentials: true})
+    axios.get("http://localhost:5000/ingredient-you-have", {withCredentials: true})
     .then((ingredients)=>{
       console.log('my ingredients<<<<<<',ingredients.data)
-      this.setState({myListOfIngredients: ingredients.data, mylistShowing:true})
+        this.setState({myListOfIngredients: ingredients.data, mylistShowing:true})
     })
   }
 
+
+  
 
   getCurrentlyLoggedInUser = () =>{
     this.service.currentUser()
@@ -108,16 +111,28 @@ class App extends React.Component{
         }
 
         <Switch>
-        <Route exact path="/refrigerator" render ={(props)=> <Refrigerator
-           {...props} 
-           allTheIngredients ={this.state.listOfAllIngredients}
-           MyIngredients = {this.state.myListOfIngredients}
-           getMyIngredients = {this.getMyIngredients}
-           ready = {this.state.ready}
-           mylistShowing = {this.state.mylistShowing}
-           getData = {this.getAllIngredients}
-           theUser = {this.state.currentlyLoggedIn} 
-           />} />
+          <Route exact path="/refrigerator" render ={(props)=> <Refrigerator
+            {...props} 
+            allTheIngredients ={this.state.listOfAllIngredients}
+            MyIngredients = {this.state.myListOfIngredients}
+            getMyIngredients = {this.getMyIngredients}
+            ready = {this.state.ready}
+            mylistShowing = {this.state.mylistShowing}
+            getData = {this.getAllIngredients}
+            theUser = {this.state.currentlyLoggedIn} 
+            />} />
+
+          <Route exact path="/details/:id" render ={(props)=> <CocktailDetails
+            {...props} 
+            allTheIngredients ={this.state.listOfAllIngredients}
+            MyIngredients = {this.state.myListOfIngredients}
+            getMyIngredients = {this.getMyIngredients}
+            ready = {this.state.ready}
+            mylistShowing = {this.state.mylistShowing}
+            getData = {this.getAllIngredients}
+            theUser = {this.state.currentlyLoggedIn} 
+            />}/>
+          
         </Switch>
       </div>
     );
